@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+      PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="mapper.member">
+	<resultMap id="memResult" type="memberVO">
+		<result property="id" column="id" />
+        <result property="pwd" column="pwd" />
+        <result property="name" column="name" />
+        <result property="email" column="email" />
+        <result property="number" column="number" />
+        <result property="role" column="role" />
+        <result property="joinDate" column="joindate" />
+	</resultMap> 
+	
+    <!-- 회원 전체 목록 조회 -->
+    <select id="selectAllMemberList" resultMap="memResult">
+        <![CDATA[
+            SELECT * FROM "Users" ORDER BY "joindate" DESC
+        ]]>
+    </select>
+    
+    <!-- 회원 가입 -->
+    <insert id="insertMember" parameterType="memberVO">
+        <![CDATA[
+            INSERT INTO "Users" ("id", "pwd", "name", "email", "number", "role", "joindate")
+            VALUES (#{id}, #{pwd}, #{name}, #{email}, #{number}, #{role}, SYSDATE)
+        ]]>
+    </insert>
+    
+    <!-- 회원 정보 수정 -->
+    <update id="updateMember" parameterType="memberVO">
+        <![CDATA[
+            UPDATE "Users"
+            SET "pwd" = #{pwd}, "name" = #{name}, "email" = #{email}, "role" = #{role}
+            WHERE "id" = #{id}
+        ]]>
+    </update>
+     
+    <!-- 회원 삭제 -->
+    <delete id="deleteMember" parameterType="String">
+        <![CDATA[
+            DELETE FROM "Users"
+            WHERE "id" = #{id}
+        ]]>
+    </delete>
+    
+    <!-- 로그인 체크 -->
+    <select id="loginById" resultMap="memResult" parameterType="memberVO">
+        <![CDATA[
+            SELECT * FROM "Users"
+            WHERE "id" = #{id} AND "pwd" = #{pwd}
+        ]]>
+    </select>
+</mapper>
