@@ -6,21 +6,21 @@
 
     <!-- 추천 세차장 조회 -->
     <select id="getRecommendedCarWashes" resultType="com.mySpring.myapp.carwash.model.CarWash">
-        SELECT washesid AS id,
-               washesname AS name,
-               washesaddress AS address,
-               washesnumber AS phone
-        FROM CarWashes
+        SELECT WASHID AS id,
+               WASHNAME AS name,
+               WASHADDR AS address,
+               WASHTEL AS tel
+        FROM CARWASHES
         WHERE ROWNUM &lt;= 10
     </select>
 
     <!-- 모든 세차장 조회 -->
     <select id="getAllCarWashes" resultType="com.mySpring.myapp.carwash.model.CarWash">
-        SELECT washesid AS id,
-               washesname AS name,
-               washesaddress AS address,
-               washesnumber AS phone
-        FROM CarWashes
+        SELECT WASHID AS id,
+               WASHNAME AS name,
+               WASHADDR AS address,
+               WASHTEL AS tel
+        FROM CARWASHES
     </select>
 
 </mapper>

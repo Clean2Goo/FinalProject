@@ -3,22 +3,21 @@ package com.mySpring.myapp.notice.vo;
 import java.sql.Date;
 
 public class NoticeVO {
-    private int articleno;
+    private int noticeno;
     private String id;
     private String title;
     private String content;
     private Date writedate;
     private String imagefilename;
-    private Date revisedate; // 수정일
-    private String reviserid; // 수정자 ID
+
 
     // Getter and Setter
-    public int getArticleno() {
-        return articleno;
+    public int getNoticeno() {
+        return noticeno;
     }
 
-    public void setArticleno(int articleno) {
-        this.articleno = articleno;
+    public void setNoticeno(int noticeno) {
+        this.noticeno = noticeno;
     }
 
     public String getId() {
@@ -61,33 +60,16 @@ public class NoticeVO {
         this.imagefilename = imagefilename;
     }
 
-    public Date getRevisedate() {
-        return revisedate;
-    }
-
-    public void setRevisedate(Date revisedate) {
-        this.revisedate = revisedate;
-    }
-
-    public String getreviserid() {
-        return reviserid;
-    }
-
-    public void setreviserid(String reviserid) {
-        this.reviserid = reviserid;
-    }
 
     @Override
     public String toString() {
         return "NoticeVO{" +
-                "articleno=" + articleno +
+                "noticeno=" + noticeno +
                 ", id='" + id + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
                 ", writedate=" + writedate +
                 ", imagefilename='" + imagefilename + '\'' +
-                ", revisedate=" + revisedate +
-                ", reviserid='" + reviserid + '\'' +
                 '}';
     }
 }

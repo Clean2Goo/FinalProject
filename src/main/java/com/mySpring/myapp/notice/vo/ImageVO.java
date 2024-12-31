@@ -2,7 +2,7 @@ package com.mySpring.myapp.notice.vo;
 
 public class ImageVO {
     private int imageFileNO;
-    private int articleNO;
+    private int noticeno;
     private String imageFileName;
 
     // Getters and Setters
@@ -14,12 +14,12 @@ public class ImageVO {
         this.imageFileNO = imageFileNO;
     }
 
-    public int getArticleNO() {
-        return articleNO;
+    public int getNoticeno() {
+        return noticeno;
     }
 
-    public void setArticleNO(int articleNO) {
-        this.articleNO = articleNO;
+    public void setNoticeno(int noticeno) {
+        this.noticeno = noticeno;
     }
 
     public String getImageFileName() {

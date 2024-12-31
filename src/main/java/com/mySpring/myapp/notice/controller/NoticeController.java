@@ -47,7 +47,7 @@ public class NoticeController {
         MemberVO memberVO = (MemberVO) session.getAttribute("member");
 
         // 작성자 ID 추가 및 관리자 권한 확인
-        if (memberVO == null || !"ADMIN".equalsIgnoreCase(memberVO.getRole())) {
+        if (memberVO == null || !"systemOperator".equalsIgnoreCase(memberVO.getUserType())) {
             ModelAndView mav = new ModelAndView("redirect:/notice/listNotices.do");
             mav.addObject("errorMessage", "관리자 권한이 필요합니다.");
             return mav;
@@ -71,11 +71,11 @@ public class NoticeController {
 
     // 공지사항 상세 보기
     @RequestMapping(value = "/viewNotice.do", method = RequestMethod.GET)
-    public ModelAndView viewNotice(@RequestParam("articleno") int articleno, HttpServletRequest request,
+    public ModelAndView viewNotice(@RequestParam("noticeno") int noticeno, HttpServletRequest request,
                                    HttpServletResponse response) throws Exception {
         String viewName = (String) request.getAttribute("viewName");
         ModelAndView mav = new ModelAndView(viewName);
-        mav.addObject("notice", noticeService.viewNotice(articleno));
+        mav.addObject("notice", noticeService.viewNotice(noticeno));
         return mav;
     }
 
@@ -95,9 +95,9 @@ public class NoticeController {
 
     // 공지사항 삭제
     @RequestMapping(value = "/deleteNotice.do", method = RequestMethod.POST)
-    public ModelAndView deleteNotice(@RequestParam("articleno") int articleno) throws Exception {
+    public ModelAndView deleteNotice(@RequestParam("noticeno") int noticeno) throws Exception {
         try {
-            noticeService.removeNotice(articleno);
+            noticeService.removeNotice(noticeno);
         } catch (Exception e) {
             e.printStackTrace();
             ModelAndView mav = new ModelAndView("redirect:/notice/listNotices.do");
