@@ -267,8 +267,11 @@ buildNumber.properties
 .mvn/timing.properties
 # https://github.com/takari/maven-wrapper#usage-without-binary-jar
 .mvn/wrapper/maven-wrapper.jar
+pom.properties
+MANIFEST.MF
 
 pom.xml
+
 
 # Eclipse m2e generated files
 # Eclipse Core
@@ -332,8 +335,4 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/maven,windows,macos,eclipse,java,git,netbeans,visualstudiocode,intellij
-.codegpt
-
-MANIFEST.MF
-
 .codegpt
