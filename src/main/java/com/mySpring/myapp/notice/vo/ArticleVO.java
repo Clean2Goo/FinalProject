@@ -3,7 +3,7 @@ package com.mySpring.myapp.notice.vo;
 import java.util.Date;
 
 public class ArticleVO {
-    private int articleNO;
+    private int noticeno;
     private int parentNO;
     private String title;
     private String content;
@@ -11,12 +11,12 @@ public class ArticleVO {
     private Date writeDate;
 
     // Getters and Setters
-    public int getArticleNO() {
-        return articleNO;
+    public int getNoticeno() {
+        return noticeno;
     }
 
-    public void setArticleNO(int articleNO) {
-        this.articleNO = articleNO;
+    public void setNoticeno(int noticeno) {
+        this.noticeno = noticeno;
     }
 
     public int getParentNO() {

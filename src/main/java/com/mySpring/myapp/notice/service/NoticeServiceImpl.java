@@ -28,8 +28,8 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public NoticeVO viewNotice(int articleno) throws Exception {
-        return noticeDAO.selectNotice(articleno);
+    public NoticeVO viewNotice(int noticeno) throws Exception {
+        return noticeDAO.selectNotice(noticeno);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public void removeNotice(int articleno) throws Exception {
-        noticeDAO.deleteNotice(articleno);
+    public void removeNotice(int noticeno) throws Exception {
+        noticeDAO.deleteNotice(noticeno);
     }
 }

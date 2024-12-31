@@ -38,15 +38,17 @@
         </tr>
         <tr>
           <td class="memF_td"><p align="right">전화번호</p></td>
-          <td class="memF_td"><input type="text" name="number" placeholder="010-1234-5678" required></td>
+          <td class="memF_td"><input type="text" name="phone" placeholder="010-1234-5678" required></td>
         </tr>
         <tr>
           <td class="memF_td"><p align="right">가입 목적</p></td>
           <td class="memF_td">
-            <select name="role">
-              <option value="user" selected>일반 사용자</option>
-              <option value="pro">세차 전문가</option>
-              <option value="ADMIN" style="display:none;">관리자</option>
+            <select name="userType">
+              <option value="customer" selected>고객</option>
+              <option value="washAdmin">세차장 관리자</option>
+              <option value="washStaff">세차장 직원</option>
+              <option value="washVisitor">출장세차업자</option>
+              <option value="systemOperator" style="display:none;">시스템운영자</option>
             </select>
           </td>
         </tr>
