@@ -32,14 +32,14 @@
 			<artifactId>spring-webmvc</artifactId>
 			<version>${org.springframework-version}</version>
 		</dependency>
-				
+
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
 			<version>${org.aspectj-version}</version>
-		</dependency>	
-		
+		</dependency>
+
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -89,7 +89,7 @@
 			<artifactId>javax.inject</artifactId>
 			<version>1</version>
 		</dependency>
-				
+
 		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>
@@ -108,7 +108,7 @@
 			<artifactId>jstl</artifactId>
 			<version>1.2</version>
 		</dependency>
-	
+
 		<!-- Test -->
 		<dependency>
 			<groupId>junit</groupId>
@@ -116,7 +116,7 @@
 			<version>4.7</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- 마이바티스 -->
 		<dependency>
 			<groupId>commons-beanutils</groupId>
@@ -153,7 +153,7 @@
 			<artifactId>OracleDriver</artifactId>
 			<version>12.1.0.2.0</version>
 			<scope>system</scope>
-			<systemPath>C:\Workspace26\Clean2Go\src\main\webapp\WEB-INF\lib\ojdbc6.jar</systemPath>
+			<systemPath>${basedir}\src\main\webapp\WEB-INF\lib\ojdbc6.jar</systemPath>
 		</dependency>
 
 		<!-- 타일즈 관련 라이브러리 -->
@@ -178,12 +178,12 @@
 		    <artifactId>commons-fileupload</artifactId>
 		    <version>1.2.1</version>
 		  </dependency>
-		
+
 		  <dependency>
 		    <groupId>commons-io</groupId>
 		    <artifactId>commons-io</artifactId>
 		    <version>1.4</version>
-		  </dependency>            
+		  </dependency>
 	</dependencies>
     <build>
         <plugins>
