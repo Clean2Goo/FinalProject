@@ -3,12 +3,12 @@ package com.mySpring.myapp.notice.vo;
 import java.util.Date;
 
 public class ArticleVO {
-    private int noticeno;
-    private int parentNO;
-    private String title;
-    private String content;
-    private String imageFileName;
-    private Date writeDate;
+    private int noticeno;      // 공지사항 번호
+    private String userid;     // 작성자 ID
+    private String title;      // 제목
+    private String content;    // 내용
+    private String noticeimg;  // 이미지 파일 이름
+    private Date crtdate;      // 작성일
 
     // Getters and Setters
     public int getNoticeno() {
@@ -19,12 +19,12 @@ public class ArticleVO {
         this.noticeno = noticeno;
     }
 
-    public int getParentNO() {
-        return parentNO;
+    public String getUserid() {
+        return userid;
     }
 
-    public void setParentNO(int parentNO) {
-        this.parentNO = parentNO;
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getTitle() {
@@ -43,19 +43,31 @@ public class ArticleVO {
         this.content = content;
     }
 
-    public String getImageFileName() {
-        return imageFileName;
+    public String getNoticeimg() {
+        return noticeimg;
     }
 
-    public void setImageFileName(String imageFileName) {
-        this.imageFileName = imageFileName;
+    public void setNoticeimg(String noticeimg) {
+        this.noticeimg = noticeimg;
     }
 
-    public Date getWriteDate() {
-        return writeDate;
+    public Date getCrtdate() {
+        return crtdate;
     }
 
-    public void setWriteDate(Date writeDate) {
-        this.writeDate = writeDate;
+    public void setCrtdate(Date crtdate) {
+        this.crtdate = crtdate;
+    }
+
+    @Override
+    public String toString() {
+        return "ArticleVO{" +
+                "noticeno=" + noticeno +
+                ", userid='" + userid + '\'' +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", noticeimg='" + noticeimg + '\'' +
+                ", crtdate=" + crtdate +
+                '}';
     }
 }

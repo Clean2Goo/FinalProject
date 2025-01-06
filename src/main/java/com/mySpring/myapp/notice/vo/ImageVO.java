@@ -1,9 +1,9 @@
 package com.mySpring.myapp.notice.vo;
 
 public class ImageVO {
-    private int imageFileNO;
-    private int noticeno;
-    private String imageFileName;
+    private int imageFileNO;   // 이미지 파일 번호
+    private int noticeno;      // 공지사항 번호
+    private String imageFileName; // 이미지 파일 이름
 
     // Getters and Setters
     public int getImageFileNO() {
@@ -28,5 +28,14 @@ public class ImageVO {
 
     public void setImageFileName(String imageFileName) {
         this.imageFileName = imageFileName;
+    }
+
+    @Override
+    public String toString() {
+        return "ImageVO{" +
+                "imageFileNO=" + imageFileNO +
+                ", noticeno=" + noticeno +
+                ", imageFileName='" + imageFileName + '\'' +
+                '}';
     }
 }

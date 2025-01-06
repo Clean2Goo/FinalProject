@@ -8,10 +8,4 @@
         <put-attribute name="title" value="세차장 탐색" />
         <put-attribute name="body" value="/WEB-INF/views/explore/explore.jsp" />
     </definition>
-    
-    
-   <definition name="earlyExplore" extends="baseLayout">
-      <put-attribute name="title" value="초기 세차장 탐색" />
-      <put-attribute name="body" value="/WEB-INF/views/explore/earlyExplore.jsp" />
-   </definition>
 </tiles-definitions>

@@ -13,7 +13,7 @@
 <body>
     <h1>새 공지사항 작성</h1>
     <div class="notice-form">
-        <form action="${pageContext.request.contextPath}/notice/addNotice.do" method="post" enctype="multipart/form-data">
+        <form action="${contextPath}/notice/addNotice.do" method="post" enctype="multipart/form-data">
             <label for="title">제목</label>
             <input type="text" name="title" id="title" required /><br />
             
@@ -27,7 +27,7 @@
         </form>
     </div>
     <div class="redo">
-    <a href="${pageContext.request.contextPath}/notice/listNotices.do">목록으로 돌아가기</a>
-	</div>
+        <a href="${contextPath}/notice/listNotices.do">목록으로 돌아가기</a>
+    </div>
 </body>
 </html>

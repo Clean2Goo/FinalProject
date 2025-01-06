@@ -1,24 +1,35 @@
-let currentPage = 1; // 현재 페이지
+// 기본 변수 설정
+let currentPage = 1;
 const itemsPerPage = 6; // 한 페이지에 표시할 세차장 개수
-let allCarWashes = [
-    { carId: 1, carName: "문현세차장", carAddress: "서울 서대문구 경기대로 35-1", carNumber: "010-2172-0017", lat: 37.558716, lng: 126.935302 },
-    { carId: 2, carName: "덕수세차장", carAddress: "서울 용산구 청파로 357", carNumber: "없음", lat: 37.550276, lng: 126.967479 },
-    { carId: 3, carName: "삼성세차장", carAddress: "서울 중구 자하문로 78", carNumber: "02-736-0582", lat: 37.582357, lng: 126.968504 },
-    { carId: 4, carName: "5위쉬셀프세차장 마포용산센터", carAddress: "서울 용산구 원효로 58-18", carNumber: "없음", lat: 37.534888, lng: 126.961394 },
-    { carId: 5, carName: "더워시 셀프세차장 서울 용산점", carAddress: "서울 용산구 신계동 40-5", carNumber: "02-3273-3737", lat: 37.534186, lng: 126.961635 },
-    { carId: 6, carName: "용진세차장", carAddress: "서울 용산구 후암로 26", carNumber: "02-779-2749", lat: 37.546873, lng: 126.973107 },
-    { carId: 7, carName: "투데이세차 광화문점", carAddress: "서울 종로구 종로 1", carNumber: "없음", lat: 37.570009, lng: 126.978291 },
-    { carId: 8, carName: "대한세탁소공회 의소 세차장", carAddress: "서울 중구 세종대로 39", carNumber: "없음", lat: 37.565679, lng: 126.977891 },
-    { carId: 9, carName: "컴인워시 HD갈월점", carAddress: "서울 용산구 한강대로 322", carNumber: "없음", lat: 37.544528, lng: 126.971312 },
-    { carId: 10, carName: "제일 세차장", carAddress: "서울 용산구 청파로 355", carNumber: "02-711-1332", lat: 37.550276, lng: 126.967479 },
-    { carId: 11, carName: "컴인워시 HD한남점", carAddress: "서울 용산구 한남대로 204", carNumber: "없음", lat: 37.533579, lng: 127.007737 },
-    { carId: 12, carName: "MK런지", carAddress: "서울 마포구 마포대로4나길 6", carNumber: "010-8670-1988", lat: 37.544632, lng: 126.952578 },
-    { carId: 13, carName: "더블유카워시 서울한성대점", carAddress: "서울 성북구 동소문로2길 7", carNumber: "010-3477-9747", lat: 37.589819, lng: 127.007285 },
-    { carId: 14, carName: "그린세차장", carAddress: "서울 마포구 만리재로 108", carNumber: "02-737-7879", lat: 37.554781, lng: 126.960489 },
-];
+let allCarWashes = []; // DB에서 가져온 세차장 데이터
+let favoriteList = new Set(); // 즐겨찾기 상태를 저장
 let markers = {}; // 마커를 저장할 객체 (key: carId)
-let activeInfoWindow = null; // 현재 열려 있는 정보 창
+let activeInfoWindow = null;
+let map; // 전역 변수로 선언
 
+// 리뷰 페이지네이션 변수
+let currentReviewPage = 1; 
+const reviewsPerPage = 3; 
+let currentReviews = []; // 현재 팝업에 표시할 리뷰 데이터
+
+// contextPath를 동적으로 가져오기
+const contextPath = document.querySelector('meta[name="contextPath"]')?.getAttribute('content') || '';
+
+// 세차장 데이터를 API로부터 가져오는 함수
+async function fetchCarWashes() {
+    try {
+        const response = await fetch(`${contextPath}/api/carwashes`);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        allCarWashes = await response.json();
+        initMap(); // 데이터를 가져온 후 맵 초기화
+    } catch (error) {
+        console.error('Failed to fetch car washes:', error);
+    }
+}
+
+// 지도 초기화 함수
 function initMap() {
     const container = document.getElementById('map');
     const options = {
@@ -26,113 +37,279 @@ function initMap() {
         level: 7 // 초기 줌 레벨
     };
 
-    const map = new kakao.maps.Map(container, options);
+    try {
+        map = new kakao.maps.Map(container, options);
+        if (!map) {
+            throw new Error('Map failed to initialize.');
+        }
 
-    // 마커 표시
-    displayCarWashMarkers(allCarWashes, map);
+        // 마커 표시
+        displayCarWashMarkers(allCarWashes);
 
-    // 추천 리스트 업데이트
-    updateRecommendedList(allCarWashes);
+        // 추천 리스트 업데이트
+        updateRecommendedList(allCarWashes);
 
-    // 페이지네이션 버튼 이벤트 등록
-    setupPaginationEvents();
+        // 페이지네이션 버튼 이벤트 등록
+        setupPaginationEvents();
+
+        // 검색 이벤트 설정 추가
+        setupSearchEvent();
+    } catch (error) {
+        console.error('Map initialization error:', error);
+    }
 }
 
-// 마커 표시 함수
-function displayCarWashMarkers(carWashList, map) {
+// 검색 이벤트 설정 함수
+function setupSearchEvent() {
+    const searchInput = document.getElementById('search');
+    searchInput.addEventListener('input', function () {
+        const searchTerm = this.value.trim().toLowerCase();
+        const filteredCarWashes = allCarWashes.filter(carWash => 
+            carWash.washName.toLowerCase().includes(searchTerm) || 
+            carWash.washAddr.toLowerCase().includes(searchTerm)
+        );
+
+        // 검색 결과 업데이트
+        displayCarWashMarkers(filteredCarWashes);
+        updateRecommendedList(filteredCarWashes);
+    });
+}
+
+// 세차장 마커를 지도에 표시하는 함수
+function displayCarWashMarkers(carWashList) {
+    if (!map) {
+        console.error('Map is not initialized');
+        return;
+    }
+
+    // 기존 마커 제거
+    Object.values(markers).forEach(marker => marker.setMap(null));
+    markers = {}; // 마커 초기화
+
     carWashList.forEach(carWash => {
-        const markerPosition = new kakao.maps.LatLng(carWash.lat, carWash.lng);
+        const markerPosition = new kakao.maps.LatLng(carWash.washLat, carWash.washLng);
         const marker = new kakao.maps.Marker({
             position: markerPosition,
             map: map,
             clickable: true
         });
 
-        markers[carWash.carId] = marker; // 마커를 carId와 연관지어 저장
+        markers[carWash.washId] = marker;
 
         const carWashInfo = `
-            <div>
-                <strong>${carWash.carName}</strong><br/>
-                주소: ${carWash.carAddress}<br/>
-                전화번호: ${carWash.carNumber}
+            <div class="kakao-info-window">
+                <strong>${carWash.washName}</strong><br/>
+                <p>주소: ${carWash.washAddr}</p>
+                <p>전화번호: ${carWash.washTel}</p>
             </div>`;
         const infowindow = new kakao.maps.InfoWindow({ content: carWashInfo });
 
-        kakao.maps.event.addListener(marker, 'click', function () {
+        kakao.maps.event.addListener(marker, 'mouseover', function () {
             if (activeInfoWindow) activeInfoWindow.close();
             infowindow.open(map, marker);
             activeInfoWindow = infowindow;
         });
+
+        kakao.maps.event.addListener(marker, 'mouseout', function () {
+            infowindow.close();
+            activeInfoWindow = null;
+        });
+
+        kakao.maps.event.addListener(marker, 'click', function () {
+            openPopup(carWash);
+        });
     });
 }
 
-// 추천 세차장 리스트 업데이트
+// 팝업을 열고 세차장 정보를 표시하는 함수
+function openPopup(carWash) {
+    const popup = document.getElementById('sliding-popup');
+    document.getElementById('popup-carwash-name').innerText = carWash.washName || "데이터없음";
+    document.getElementById('popup-carwash-name').setAttribute("data-id", carWash.washId); // 세차장 ID 설정
+    document.getElementById('popup-carwash-address').innerText = carWash.washAddr || "데이터없음";
+    document.getElementById('popup-carwash-phone').innerText = carWash.washTel || "데이터없음";
+
+    const popupImage = document.getElementById('popup-carwash-image');
+    popupImage.src = carWash.washImg || `${contextPath}/resources/images/default-carwash.jpg`; // 기본 이미지 설정
+    popupImage.alt = carWash.washName || "세차장 이미지";
+
+    popup.style.display = 'block';
+    popup.classList.add('open');
+
+    // 세차장 리뷰 목록 불러오기
+    fetchReviewsForCarWash(carWash.washId);
+}
+
+// 팝업을 닫는 함수
+function closePopup() {
+    const popup = document.getElementById('sliding-popup');
+    popup.style.display = 'none';
+    popup.classList.remove('open');
+}
+
+document.querySelector('.close-btn').addEventListener('click', closePopup);
+
+// 리뷰 작성 및 제출
+document.getElementById("submit-review-button").addEventListener("click", async () => {
+    const reviewContent = document.getElementById("review-content").value;
+    const reviewScore = document.getElementById("review-score").value;
+    const carWashId = document.getElementById("popup-carwash-name").getAttribute("data-id");
+
+    if (!reviewContent.trim() || isNaN(reviewScore) || reviewScore < 1 || reviewScore > 5 || !carWashId) {
+        alert("리뷰 내용을 올바르게 입력해주세요.");
+        return;
+    }
+
+    const reviewData = {
+        rsvId: carWashId,
+        rwvScore: parseInt(reviewScore),
+        content: reviewContent,
+        crtDate: new Date().toISOString()
+    };
+
+    try {
+        const response = await fetch(`${contextPath}/api/reviews`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(reviewData)
+        });
+
+        if (response.ok) {
+            alert("리뷰가 성공적으로 제출되었습니다.");
+            document.getElementById("review-content").value = ""; // 입력 필드 초기화
+            document.getElementById("review-score").value = "";
+            fetchReviewsForCarWash(carWashId); // 리뷰 목록 갱신
+        } else {
+            const error = await response.text();
+            console.error("Failed to submit review:", error);
+            alert("리뷰 제출 중 오류가 발생했습니다.");
+        }
+    } catch (error) {
+        console.error("Error submitting review:", error);
+        alert("리뷰 제출 중 문제가 발생했습니다.");
+    }
+});
+
+// 특정 세차장의 리뷰 목록 가져오기
+async function fetchReviewsForCarWash(carWashId) {
+    try {
+        const response = await fetch(`${contextPath}/api/reviews/${carWashId}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch reviews: ${response.status}`);
+        }
+
+        currentReviews = await response.json(); // 전체 리뷰 데이터를 클라이언트에 저장
+        currentReviewPage = 1; // 리뷰 페이지 초기화
+        updateReviewList();
+    } catch (error) {
+        console.error("Failed to fetch reviews:", error);
+    }
+}
+
+// 리뷰 목록 UI 업데이트 (페이지네이션 포함)
+function updateReviewList() {
+    const reviewList = document.getElementById("review-list");
+    reviewList.innerHTML = "";
+
+    const totalPages = Math.ceil(currentReviews.length / reviewsPerPage);
+    const startIndex = (currentReviewPage - 1) * reviewsPerPage;
+    const endIndex = startIndex + reviewsPerPage;
+    const reviewsToDisplay = currentReviews.slice(startIndex, endIndex);
+
+    reviewsToDisplay.forEach(review => {
+        const reviewItem = document.createElement("div");
+        reviewItem.classList.add("review-item");
+        reviewItem.innerHTML = `
+            <div class="review-header">
+                <img src="/resources/images/default-profile.jpg" alt="프로필 이미지" class="profile-img">
+                <div>
+                    <p class="username">사용자 이름</p>
+                    <p class="review-date">${new Date(review.crtDate).toLocaleString()}</p>
+                </div>
+            </div>
+            <p class="review-content">${review.content}</p>
+            <p class="review-score">점수: ${review.rwvScore}</p>
+        `;
+        reviewList.appendChild(reviewItem);
+    });
+
+    // 페이지네이션 버튼 활성화/비활성화
+    document.getElementById("prev-review-button").disabled = currentReviewPage === 1;
+    document.getElementById("next-review-button").disabled = currentReviewPage === totalPages;
+
+    // 페이지 정보 업데이트
+    document.getElementById("review-page-info").innerText = `${currentReviewPage} / ${totalPages}`;
+}
+
+// 이전 리뷰 페이지로 이동
+document.getElementById("prev-review-button").addEventListener("click", () => {
+    if (currentReviewPage > 1) {
+        currentReviewPage--;
+        updateReviewList();
+    }
+});
+
+// 다음 리뷰 페이지로 이동
+document.getElementById("next-review-button").addEventListener("click", () => {
+    const totalPages = Math.ceil(currentReviews.length / reviewsPerPage);
+    if (currentReviewPage < totalPages) {
+        currentReviewPage++;
+        updateReviewList();
+    }
+});
+
+// 추천 세차장 리스트를 업데이트하는 함수
 function updateRecommendedList(carWashList) {
     const recommendedList = document.getElementById("recommended-list");
     recommendedList.innerHTML = ''; // 기존 리스트 초기화
 
-    if (carWashList.length === 0) {
-        // 검색 결과가 없을 때 처리
-        recommendedList.innerHTML = '<p>검색 결과가 없습니다.</p>';
-        return;
-    }
-
-    // 총 페이지 수 계산
     const totalPages = Math.ceil(carWashList.length / itemsPerPage);
-
-    // 현재 페이지의 데이터 가져오기
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const currentCarWashes = carWashList.slice(startIndex, endIndex);
 
-    // 현재 페이지 데이터 렌더링
     currentCarWashes.forEach(carWash => {
         const carWashCard = document.createElement("div");
         carWashCard.classList.add("recommend-item");
 
+        const isFavorite = favoriteList.has(carWash.washId) ? "active" : "";
+        const imageUrl = carWash.washImg || `${contextPath}/resources/images/default-carwash.jpg`; // 기본 이미지 설정
+
         carWashCard.innerHTML = `
-            <div>
-                <h3>${carWash.carName}</h3>
-                <p>주소: ${carWash.carAddress}</p>
-                <p>전화번호: ${carWash.carNumber}</p>
-                <button class="reserve-button" data-id="${carWash.carId}" data-name="${carWash.carName}">예약하기</button>
-            </div>
-        `;
+            <div class="recommend-item-content">
+                <img src="${imageUrl}" alt="${carWash.washName}" class="carwash-image" />
+                <h3>${carWash.washName}</h3>
+                <p>주소: ${carWash.washAddr}</p>
+                <p>전화번호: ${carWash.washTel}</p>
+                <p>영업시간: ${carWash.openHrs || "정보 없음"}</p>
+                <button class="reserve-button" onclick="redirectToReservation('${carWash.washId}')">예약하기</button>
+                <button id="favorite-${carWash.washId}" class="favorite-button ${isFavorite}" onclick="toggleFavorite('${carWash.washId}')">
+                    <span class="star-icon">★</span>
+                </button>
+            </div>`;
+
+        carWashCard.addEventListener('click', () => {
+            map.setCenter(new kakao.maps.LatLng(carWash.washLat, carWash.washLng));
+            openPopup(carWash);
+        });
+
         recommendedList.appendChild(carWashCard);
     });
 
-    // 예약하기 버튼 이벤트 등록
-    document.querySelectorAll(".reserve-button").forEach(button => {
-        button.addEventListener("click", (e) => {
-            const carName = e.target.getAttribute("data-name");
-            alert(`${carName} : 예약이 완료되었습니다!`);
-        });
-    });
-
-    // 페이지네이션 버튼 업데이트
     const pagination = document.getElementById("pagination");
     pagination.innerHTML = `
-        <button id="prevPage" ${currentPage === 1 ? "disabled" : ""}>이전</button>
-        <span>페이지 ${currentPage} / ${totalPages}</span>
-        <button id="nextPage" ${currentPage === totalPages ? "disabled" : ""}>다음</button>
-    `;
-    setupPaginationEvents(); // 새로 생성된 버튼에 이벤트 등록
+        <button class="pagination-button" id="prevPage" ${currentPage === 1 ? "disabled" : ""}>이전</button>
+        <span class="pagination-info">페이지 ${currentPage} / ${totalPages}</span>
+        <button class="pagination-button" id="nextPage" ${currentPage === totalPages ? "disabled" : ""}>다음</button>`;
+
+    setupPaginationEvents();
 }
 
-// 검색 기능
-document.getElementById('search').addEventListener('input', function (event) {
-    const query = event.target.value.toLowerCase(); // 검색어를 소문자로 변환
-    const filteredCarWashes = allCarWashes.filter(carWash => {
-        // 이름(name)이나 주소(address)에 검색어가 포함되어 있는지 확인
-        return (
-            carWash.carName.toLowerCase().includes(query) ||
-            carWash.carAddress.toLowerCase().includes(query)
-        );
-    });
-
-    // 필터링된 결과로 추천 리스트 업데이트
-    updateRecommendedList(filteredCarWashes);
-});
+function redirectToReservation(carWashId) {
+    window.location.href = `${contextPath}/reservation.do?carWashId=${carWashId}`;
+}
 
 // 페이지 변경 함수
 function changePage(direction) {
@@ -140,11 +317,10 @@ function changePage(direction) {
     updateRecommendedList(allCarWashes);
 }
 
-// 페이지네이션 이벤트 등록 함수
+// 페이지네이션 이벤트 설정
 function setupPaginationEvents() {
     document.getElementById("prevPage").addEventListener("click", () => changePage(-1));
     document.getElementById("nextPage").addEventListener("click", () => changePage(1));
 }
 
-// DOMContentLoaded 시 initMap 실행
-document.addEventListener("DOMContentLoaded", initMap);
+document.addEventListener("DOMContentLoaded", fetchCarWashes);

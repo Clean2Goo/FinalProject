@@ -3,13 +3,13 @@ package com.mySpring.myapp.notice.vo;
 import java.sql.Date;
 
 public class NoticeVO {
-    private int noticeno;
-    private String id;
-    private String title;
-    private String content;
-    private Date writedate;
-    private String imagefilename;
-
+    private int noticeno;        // 공지사항 번호
+    private String noticeid;     // 공지사항 ID
+    private String userid;       // 작성자 ID
+    private String title;        // 제목
+    private String content;      // 내용
+    private String noticeimg;    // 이미지 파일명
+    private Date crtdate;        // 작성일
 
     // Getter and Setter
     public int getNoticeno() {
@@ -20,12 +20,20 @@ public class NoticeVO {
         this.noticeno = noticeno;
     }
 
-    public String getId() {
-        return id;
+    public String getNoticeid() {
+        return noticeid;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setNoticeid(String noticeid) {
+        this.noticeid = noticeid;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
     }
 
     public String getTitle() {
@@ -44,32 +52,32 @@ public class NoticeVO {
         this.content = content;
     }
 
-    public Date getWritedate() {
-        return writedate;
+    public String getNoticeimg() {
+        return noticeimg;
     }
 
-    public void setWritedate(Date writedate) {
-        this.writedate = writedate;
+    public void setNoticeimg(String noticeimg) {
+        this.noticeimg = noticeimg;
     }
 
-    public String getImagefilename() {
-        return imagefilename;
+    public Date getCrtdate() {
+        return crtdate;
     }
 
-    public void setImagefilename(String imagefilename) {
-        this.imagefilename = imagefilename;
+    public void setCrtdate(Date crtdate) {
+        this.crtdate = crtdate;
     }
-
 
     @Override
     public String toString() {
         return "NoticeVO{" +
                 "noticeno=" + noticeno +
-                ", id='" + id + '\'' +
+                ", noticeid='" + noticeid + '\'' +
+                ", userid='" + userid + '\'' +
                 ", title='" + title + '\'' +
                 ", content='" + content + '\'' +
-                ", writedate=" + writedate +
-                ", imagefilename='" + imagefilename + '\'' +
+                ", noticeimg='" + noticeimg + '\'' +
+                ", crtdate=" + crtdate +
                 '}';
     }
 }

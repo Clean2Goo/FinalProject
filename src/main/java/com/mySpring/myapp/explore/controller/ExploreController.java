@@ -2,21 +2,13 @@ package com.mySpring.myapp.explore.controller;
 
 import com.mySpring.myapp.carwash.model.CarWash;
 import com.mySpring.myapp.carwash.service.CarWashService;
-import com.mySpring.myapp.member.vo.MemberVO;
-
+import com.mySpring.myapp.explore.service.KakaoApiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class ExploreController {
@@ -24,20 +16,37 @@ public class ExploreController {
     @Autowired
     private CarWashService carWashService;
 
+    @Autowired
+    private KakaoApiService kakaoApiService;
+
     @GetMapping("/explore.do")
     public String explorePage(Model model) {
-        // DB에서 세차장 데이터를 가져옴
         List<CarWash> carWashList = carWashService.getAllCarWashes();
         model.addAttribute("carWashList", carWashList);
-        return "explore"; // explore.jsp를 반환
+        return "explore";
     }
-    
-    @GetMapping("/earlyExplore.do")
-    public String earlyExplorePage(Model model) {
-        // DB에서 세차장 데이터를 가져옴
-        List<CarWash> carWashList = carWashService.getAllCarWashes();
-        model.addAttribute("carWashList", carWashList);
-        return "earlyExplore"; // explore.jsp를 반환
+
+    @GetMapping("/fetch-and-save")
+    public String fetchAndSaveCarWashes() {
+        double[][] seoulCenters = {
+            {127.027619, 37.497942}, // 강남구
+            {126.978406, 37.570705}, // 종로구
+            {126.929669, 37.617437}, // 은평구
+            {127.112743, 37.514126}, // 송파구
+            {126.901451, 37.554484}  // 마포구
+        };
+
+        try {
+            for (double[] center : seoulCenters) {
+                kakaoApiService.fetchAndSaveCarWashes("세차장", center[0], center[1], 20000);
+            }
+            return "redirect:/explore.do";
+        } catch (Exception e) {
+            System.err.println("Error in /fetch-and-save: " + e.getMessage());
+            e.printStackTrace();
+            return "error";
+        }
     }
-    
+
+
 }

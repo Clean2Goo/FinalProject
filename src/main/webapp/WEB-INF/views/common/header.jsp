@@ -33,7 +33,7 @@
                     <a href="#">서비스</a>
                     <ul class="dropdown">
                         <li><a href="${contextPath}/explore.do">기계 세차</a></li>
-                        <li><a href="${contextPath}/earlyExplore.do">셀프 세차</a></li>
+                        <li><a href="#">셀프 세차</a></li>
                         <li><a href="#">전문가 세차</a></li>
                         <li><a href="#">출장 세차</a></li>
                     </ul>

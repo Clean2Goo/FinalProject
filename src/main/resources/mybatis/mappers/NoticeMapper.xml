@@ -7,35 +7,34 @@
     <!-- 공지사항 목록 조회 -->
     <select id="selectAllNoticesList" resultType="com.mySpring.myapp.notice.vo.NoticeVO">
         <![CDATA[
-        SELECT NOTICENO AS noticeno, USERID AS id, TITLE AS title, CONTENT AS content, 
-               CRTDATE AS writedate, NOTICEIMG AS imagefilename
-        FROM NOTICES
-        ORDER BY NOTICENO DESC
+        SELECT "NOTICENO", "NOTICEID", "USERID", "TITLE", "CONTENT", "NOTICEIMG", "CRTDATE"
+        FROM "NOTICES"
+        ORDER BY "NOTICENO" DESC
         ]]>
     </select>
 
     <!-- 공지사항 상세 보기 -->
     <select id="selectNotice" parameterType="int" resultType="com.mySpring.myapp.notice.vo.NoticeVO">
         <![CDATA[
-        SELECT NOTICENO AS noticeno, USERID AS id, TITLE AS title, CONTENT AS content, 
-               CRTDATE AS writedate, NOTICEIMG AS imagefilename
-        FROM NOTICES
-        WHERE NOTICENO = #{noticeno}
+        SELECT "NOTICENO", "NOTICEID", "USERID", "TITLE", "CONTENT", "NOTICEIMG", "CRTDATE"
+        FROM "NOTICES"
+        WHERE "NOTICENO" = #{noticeno}
         ]]>
     </select>
 
     <!-- 공지사항 등록 -->
     <insert id="insertNotice" parameterType="map">
         <![CDATA[
-        INSERT INTO NOTICES 
-        (NOTICENO, USERID, TITLE, CONTENT, CRTDATE, NOTICEIMG)
+        INSERT INTO "NOTICES" 
+        ("NOTICENO", "NOTICEID", "USERID", "TITLE", "CONTENT", "NOTICEIMG", "CRTDATE")
         VALUES (
             #{noticeno}, 
-            #{id, jdbcType=VARCHAR}, 
+            NOTICEID_SEQ.NEXTVAL, -- SEQUENCE 사용
+            #{userid, jdbcType=VARCHAR}, 
             #{title, jdbcType=VARCHAR}, 
-            #{content, jdbcType=CLOB}, 
-            SYSDATE, 
-            #{imagefilename, jdbcType=VARCHAR}
+            #{content, jdbcType=VARCHAR}, 
+            #{noticeimg, jdbcType=VARCHAR}, 
+            SYSDATE
         )
         ]]>
     </insert>
@@ -43,15 +42,15 @@
     <!-- 공지사항 삭제 -->
     <delete id="deleteNotice" parameterType="int">
         <![CDATA[
-        DELETE FROM NOTICES
-        WHERE NOTICENO = #{noticeno}
+        DELETE FROM "NOTICES"
+        WHERE "NOTICENO" = #{noticeno}
         ]]>
     </delete>
 
     <!-- 새 공지사항 번호 생성 -->
-    <select id="selectNewNoticeno" resultType="int">
+    <select id="selectNewArticleNo" resultType="int">
         <![CDATA[
-        SELECT NVL(MAX(NOTICENO), 0) + 1 FROM NOTICES
+        SELECT NVL(MAX("NOTICENO"), 0) + 1 FROM "NOTICES"
         ]]>
     </select>
 

@@ -17,40 +17,33 @@ public class NoticeDAOImpl implements NoticeDAO {
 
     @Override
     public List<NoticeVO> selectAllNoticesList() throws DataAccessException {
-    	return sqlSession.selectList("com.mySpring.myapp.notice.dao.NoticeDAO.selectAllNoticesList");
-
+        return sqlSession.selectList("com.mySpring.myapp.notice.dao.NoticeDAO.selectAllNoticesList");
     }
-
-
 
     @Override
     public int insertNewNotice(Map<String, Object> noticeMap) throws DataAccessException {
-        int noticeno = selectNewNoticeno();
-        noticeMap.put("noticeno", noticeno);
+        int articleno = selectNewArticleNo();
+        noticeMap.put("noticeno", articleno);
         sqlSession.insert("com.mySpring.myapp.notice.dao.NoticeDAO.insertNotice", noticeMap);
-
-        return noticeno;
+        return articleno;
     }
 
     @Override
-    public NoticeVO selectNotice(int noticeno) throws DataAccessException {
-        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNotice", noticeno); // 수정됨
+    public NoticeVO selectNotice(int articleno) throws DataAccessException {
+        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNotice", articleno);
     }
-
 
     @Override
     public void updateNotice(Map<String, Object> noticeMap) throws DataAccessException {
-        sqlSession.update("mapper.notice.updateNotice", noticeMap);
+        sqlSession.update("com.mySpring.myapp.notice.dao.NoticeDAO.updateNotice", noticeMap);
     }
 
     @Override
-    public void deleteNotice(int noticeno) throws DataAccessException {
-        sqlSession.delete("com.mySpring.myapp.notice.dao.NoticeDAO.deleteNotice", noticeno);
+    public void deleteNotice(int articleno) throws DataAccessException {
+        sqlSession.delete("com.mySpring.myapp.notice.dao.NoticeDAO.deleteNotice", articleno);
     }
 
-
-    private int selectNewNoticeno() throws DataAccessException {
-        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNewNoticeno");
+    private int selectNewArticleNo() throws DataAccessException {
+        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNewArticleNo");
     }
-
 }

@@ -6,73 +6,72 @@ import org.springframework.stereotype.Component;
 
 @Component("memberVO")
 public class MemberVO {
-	private String id;
-	private String pwd;
-	private String name;
-	private String email;
-	private String phone; 
-    private String userType; 
-    private Date joinDate; 
+    private String id;       // USERID
+    private String pwd;      // USERPWD
+    private String name;     // USERNAME
+    private String email;    // USEREMAIL
+    private String number;   // USERPHONE
+    private String role;     // USERTYPE
+    private Date joinDate;   // JOINDATE
 
-	public MemberVO() {
-		
-	}
+    public MemberVO() {
+    }
 
-	public MemberVO(String id, String pwd, String name, String email, String phone, String userType) {
+    public MemberVO(String id, String pwd, String name, String email, String number, String role) {
         this.id = id;
         this.pwd = pwd;
         this.name = name;
         this.email = email;
-        this.phone = phone;
-        this.userType = userType;
+        this.number = number;
+        this.role = role;
     }
 
-	public String getId() {
-		return id;
-	}
-
-	public void setId(String id) {
-		this.id = id;
-	}
-
-	public String getPwd() {
-		return pwd;
-	}
-
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getPhone() {
-        return phone;
+    public String getId() {
+        return id;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public String getUserType() {
-        return userType;
+    public String getPwd() {
+        return pwd;
     }
 
-    public void setUserType(String userType) {
-        this.userType = userType;
+    public void setPwd(String pwd) {
+        this.pwd = pwd;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public Date getJoinDate() {

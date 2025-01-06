@@ -26,7 +26,7 @@
 	            <div class="ment"> 기계세차</div>
 	        </li>
 	        <li>
-	            <a href="${contextPath}/earlyExplore.do">
+	            <a href="#">
 	            	<img src="${contextPath}/resources/images/self.png" alt="셀프세차 아이콘">
 	            </a>
 	            <div class="ment"> 셀프세차</div>
