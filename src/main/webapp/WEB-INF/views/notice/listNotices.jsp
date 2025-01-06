@@ -15,7 +15,7 @@
         <h1>공지사항 목록</h1>
         
         <!-- 공지사항 작성 버튼 (관리자만 보임) -->
-        <c:if test="${member.role == 'ADMIN'}">
+        <c:if test="${member.userType == 'systemOperator'}">
             <a href="${contextPath}/notice/writeForm.do" class="notice-write-btn">공지사항 작성</a>
         </c:if>
 
@@ -33,9 +33,9 @@
             <tbody>
                 <c:forEach items="${noticesList}" var="notice">
                     <tr>
-                        <td>${notice.articleno}</td>
+                        <td>${notice.noticeno}</td>
                         <td>
-                            <a href="${pageContext.request.contextPath}/notice/viewNotice.do?articleno=${notice.articleno}">
+                            <a href="${pageContext.request.contextPath}/notice/viewNotice.do?noticeno=${notice.noticeno}">
                                 ${notice.title}
                             </a>
                         </td>
@@ -43,9 +43,9 @@
                         <td>${notice.writedate}</td>
                         <td>
                             <!-- 삭제 버튼 (관리자만 보임) -->
-                            <c:if test="${member.role == 'ADMIN'}">
+                            <c:if test="${member.userType == 'systemOperator'}">
                                 <form action="${pageContext.request.contextPath}/notice/deleteNotice.do" method="post" style="display: inline;">
-                                    <input type="hidden" name="articleno" value="${notice.articleno}" />
+                                    <input type="hidden" name="noticeno" value="${notice.noticeno}" />
                                     <button type="submit" class="delete-btn">삭제</button>
                                 </form>
                             </c:if>

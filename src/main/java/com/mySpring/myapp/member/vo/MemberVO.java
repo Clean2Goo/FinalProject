@@ -10,21 +10,21 @@ public class MemberVO {
 	private String pwd;
 	private String name;
 	private String email;
-	private String number; // 연락처
-    private String role; // 역할
-    private Date joinDate; // 가입 날짜
+	private String phone; 
+    private String userType; 
+    private Date joinDate; 
 
 	public MemberVO() {
 		
 	}
 
-	public MemberVO(String id, String pwd, String name, String email, String number, String role) {
+	public MemberVO(String id, String pwd, String name, String email, String phone, String userType) {
         this.id = id;
         this.pwd = pwd;
         this.name = name;
         this.email = email;
-        this.number = number;
-        this.role = role;
+        this.phone = phone;
+        this.userType = userType;
     }
 
 	public String getId() {
@@ -59,20 +59,20 @@ public class MemberVO {
 		this.email = email;
 	}
 
-	public String getNumber() {
-        return number;
+	public String getPhone() {
+        return phone;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
-    public String getRole() {
-        return role;
+    public String getUserType() {
+        return userType;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 
     public Date getJoinDate() {

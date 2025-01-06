@@ -25,16 +25,16 @@ public class NoticeDAOImpl implements NoticeDAO {
 
     @Override
     public int insertNewNotice(Map<String, Object> noticeMap) throws DataAccessException {
-        int articleno = selectNewArticleNo();
-        noticeMap.put("articleno", articleno);
+        int noticeno = selectNewNoticeno();
+        noticeMap.put("noticeno", noticeno);
         sqlSession.insert("com.mySpring.myapp.notice.dao.NoticeDAO.insertNotice", noticeMap);
 
-        return articleno;
+        return noticeno;
     }
 
     @Override
-    public NoticeVO selectNotice(int articleno) throws DataAccessException {
-        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNotice", articleno); // 수정됨
+    public NoticeVO selectNotice(int noticeno) throws DataAccessException {
+        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNotice", noticeno); // 수정됨
     }
 
 
@@ -44,13 +44,13 @@ public class NoticeDAOImpl implements NoticeDAO {
     }
 
     @Override
-    public void deleteNotice(int articleno) throws DataAccessException {
-        sqlSession.delete("com.mySpring.myapp.notice.dao.NoticeDAO.deleteNotice", articleno);
+    public void deleteNotice(int noticeno) throws DataAccessException {
+        sqlSession.delete("com.mySpring.myapp.notice.dao.NoticeDAO.deleteNotice", noticeno);
     }
 
 
-    private int selectNewArticleNo() throws DataAccessException {
-        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNewArticleNo");
+    private int selectNewNoticeno() throws DataAccessException {
+        return sqlSession.selectOne("com.mySpring.myapp.notice.dao.NoticeDAO.selectNewNoticeno");
     }
 
 }
